@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: tonic-queue
-  namespace: tonic
   labels:
     app: tonic-queue
 spec:
@@ -27,7 +26,13 @@ spec:
         name: tonic-queue
         ports:
         - containerPort: 5672
-        resources: {}
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            cpu: 100m
+            memory: 256Mi
       restartPolicy: Always
       serviceAccountName: ""
       volumes: null

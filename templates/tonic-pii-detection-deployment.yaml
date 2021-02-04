@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: tonic-pii-detection
-  namespace: tonic
   labels:
     app: tonic-pii-detection  
 spec:
@@ -22,11 +21,17 @@ spec:
           value: {{quote .Values.enableLogCollection }}
         - name: ENVIRONMENT_NAME
           value: {{ .Values.environmentName }}
-        image: {{ .Values.dockerRepoBaseUrl }}/tonic_pii_detection:latest
+        image: {{ .Values.dockerRepoBaseUrl }}/tonic_pii_detection:{{ .Values.dockerImageTag }}
         imagePullPolicy: ""
         name: tonic-pii-detection
         ports:
         - containerPort: 7687
-        resources: {}
+        resources:
+          requests:
+            cpu: 125m
+            memory: 2Gi
+          limits:
+            cpu: 250m
+            memory: 3Gi
       restartPolicy: Always
       serviceAccountName: ""

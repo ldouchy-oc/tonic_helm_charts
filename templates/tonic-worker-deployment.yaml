@@ -4,7 +4,6 @@ metadata:
   labels:
     app: tonic-worker
   name: tonic-worker
-  namespace: tonic
 spec:
   replicas: {{ .Values.numberOfWorkers }}
   selector:
@@ -46,13 +45,19 @@ spec:
           value: {{ .Values.environmentName }}
         - name: TONIC_PII_DETECTION_URL
           value: https://tonic-pii-detection:7687
-        image: {{ .Values.dockerRepoBaseUrl }}/tonic_worker:latest
+        image: {{ .Values.dockerRepoBaseUrl }}/tonic_worker:{{ .Values.dockerImageTag }}
         imagePullPolicy: ""
         name: tonic-worker
         ports:
         - containerPort: 80
         - containerPort: 443
-        resources: {}
+        resources:
+          requests:
+            cpu: 250m
+            memory: 1Gi
+          limits:
+            cpu: 500m
+            memory: 2Gi
         livenessProbe:
           httpGet:
             path: /health
